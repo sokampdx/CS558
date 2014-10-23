@@ -57,31 +57,61 @@ triangle(Min, Max, []) :- Min > Max.
 
 % Manipulate a list:
 %   length of a list
-mylength([_|Tail], N) :-
-	mylength(Tail, X),
+myLength([_|Tail], N) :-
+	myLength(Tail, X),
 	N is X + 1.
-mylength([], 0).
+myLength([], 0).
 
 %   append two list
-myappend([], List, List).
-myappend(List1, List2, Result) :-
-	myappend(Tail1, List2, Tail), 
+myAppend([], List, List).
+myAppend(List1, List2, Result) :-
+	myAppend(Tail1, List2, Tail), 
 	List1 is [Head|Tail1],
 	Result is [Head|Tail].
 
-append2([], Y, Y).
-append2([A|T], Y, [A|W]) :- append2(T, Y, W).
+myAppend2([], Y, Y).
+myAppend2([A|T], Y, [A|W]) :- myAppend2(T, Y, W).
 
 %   reverse a list
+myReverse([], []).
+myReverse([H|T], R) :- 
+	myReverse(T, L1),
+	append(L1, [H], R). 
 
 %   find first element
-%   find last element
-%   find n-th element
+myHead([], []).
+myHead([H|_], H).
 
+%   find last element
+myLast([H|[]], H).
+myLast([_|T], X) :- mylast(T, X).
+
+%   find n-th element
+elementAt([H|_], 1, H).
+elementAt([_|T], N, X) :-
+	M is N-1,
+	elementat(T, M, X).
+	
 %   remove first element
+removeFirst([], []).
+removeFirst([_|T], T).
+
 %   remove given element
+removeElement([H|T], H, T).
+removeElement([H|T], X, [H|L]) :-
+	removeElement(T, X, L).
+
 %   remove last element
+removeLast([_|[]], []).
+removeLast([H|T], [H|L]) :-
+	removeLast(T, L).
+
 %   remove n-th element
+removeNElement([_|T], 1, T).
+removeNElement([_|T], N, X) :-
+	M is N-1,
+	removeNElement(T, M, X).
+
 %   insert element at end
 %   insert element at n-th position
 
