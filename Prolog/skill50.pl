@@ -1,9 +1,55 @@
 % Numbers Properties
 %   Find all the factors of a positive integer
+divisible(A, B) :-
+	X is A mod B,
+	X == 0.
+
+notDivisible(A, B) :-
+	X is A mod B,
+	X \= 0.
+
+factor(N, Result) :-
+	N >= 1,
+	factorList(N, N, [], Result).
+factorList(_, 1, Result, [1|Result]).
+factorList(N, F, Current, Result) :- 
+	F > 1,
+	divisible(N, F),
+	F1 is F - 1,
+	append([F], Current, Next),
+	factorList(N, F1, Next, Result).
+factorList(N, F, Current, Result) :-
+	F > 1,
+	notDivisible(N, F),
+	F1 is F - 1,
+	factorList(N, F1, Current, Result).
+
 
 %   Find a prime factorization of a positive integer
+primeFact(1, []).
+primeFact(N, Result) :-
+	factor(N, List),
+	primeCheck(List, Result).
+
+primeCheck([], []).
+primeCheck([1|Check], Result) :-
+	primeCheck(Check, Result).
+primeCheck([F|Factor], [F|Result]) :-
+	F > 1,
+	divisibleList(F, Factor, Remain),
+	primeCheck(Remain, Result).
+
+divisibleList(_, [], []).
+divisibleList(F, [C|Check], Remain) :-
+	divisible(C, F),
+	divisibleList(F, Check, Remain).
+divisibleList(F, [C|Check], [C|Remain]) :-
+	notDivisible(C, F),
+	divisibleList(F, Check, Remain).
+
 
 %   Tell whether a number is prime
+isPrime(N) :- primeFact(N, [N]), !.
 
 % Construct lists:
 %   [1,2,3,...]
