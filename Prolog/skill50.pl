@@ -49,11 +49,32 @@ triangle(Min, Max, List) :-
 triangle(Min, Max, []) :- Min > Max.
 
 %   primes
+
+
+
 %   fibonacci sequence
+fib([0,1|X]) :-
+    ffib(0,1,X).
+ffib(A,B,X) :-
+    freeze(X, (C is A+B, X=[C|Y], ffib(B,C,Y)) ).	
 
 
+myfib2(N, F) :- myfib4(N, 0, 1, F).
+myfib4(0, A, _, A) :- !.
+myfib4(N, A, B, F) :-
+	N1 is N - 1,
+	Sum is A + B,
+	myfib4(N1, B, Sum, F).	
 
-
+myfib(0, 0) :- !.
+myfib(1, 1) :- !.
+myfib(N, F) :-
+	N > 1,
+	A is N-1,
+	B is N-2,
+	myfib(A, F1),
+	myfib(B, F2),
+	F is F1 + F2.
 
 % Manipulate a list:
 %   length of a list
@@ -113,12 +134,50 @@ removeNElement([_|T], N, X) :-
 	removeNElement(T, M, X).
 
 %   insert element at end
+insertLast(X, [], [X]).
+insertLast(X, [H|T], [H|Z]) :-
+	insertLast(X, T, Z).
+
 %   insert element at n-th position
+insertAt(X, 1, L, [X|L]).
+insertAt(X, N, [H|T], [H|R]) :-
+	N > 1,
+	M is N-1,
+	insertAt(X, M, T, R).
 
 %   take first n element
+take(0, _, []).
+take(N, [H|T], [H|L]) :-
+	N > 0,
+	M is N-1,
+	take(M, T, L).
+
 %   drop first n element
+drop(0, X, X).
+drop(N, [_|T], L) :-
+	N > 0,
+	M is N-1,
+	drop(M, T, L).
+
 %   take last n element
+takeLast(N, S, R) :-
+	N >= 0,
+	length(S, LS),
+	length(R, N),
+	X is LS - N,
+	drop(X, S, R).
+	
 %   drop last n element
+dropLast(0, S, S).
+dropLast(N, S, R) :-
+	N > 0,
+	length(S, LS),
+	length(R, LR),
+	LR is LS - N,
+	take(LR, S, R).
+
+
+
 
 %   remove all even numbers
 %   remove all except even numbers
