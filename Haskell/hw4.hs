@@ -23,6 +23,7 @@ data Statement
 
 
 -- Problem 2a : Factorial
+-- [("n",1),("fact",5040)]
 factorial :: Statement
 factorial = Compound [stmt1, stmt2, stmt3]
 stmt1 = Assignment (Variable "n") (Number 7)
@@ -33,7 +34,9 @@ stmt4 = Compound [stmt5, stmt6]
 stmt5 = Assignment (Variable "fact") (Binary (Variable "fact") Mul (Variable "n"))
 stmt6 = Assignment (Variable "n") (Binary (Variable "n") Sub (Number 1))
 
+
 -- Problem 2b : Collatz Sequence (Reference Project Euler Problem 14)
+-- [("num",1),("terms",10)]
 collatz :: Statement
 collatz = Compound [stmta, stmtb, stmtc]
 stmta = Assignment (Variable "num") (Number 13)
@@ -50,6 +53,7 @@ exprc = Binary (Variable "num") Mul (Number 3)
 
 
 -- Problem 3 : Interpreter
+-- The interpreter only work for integer values.
 environ :: [(String, Int)]
 environ = []
 
@@ -79,16 +83,49 @@ value (Binary e1 op e2) env = cal op (value e1 env) (value e2 env)
         cal GrE v1 v2 | v1 >= v2 = 1
                       | otherwise = 0
 
+-- assignment (change environment)
+assign :: String -> Int -> [(String, Int)] -> [(String, Int)]
+assign name val [] = [(name, val)]
+assign name val ((n,v):xs) 
+    | name == n = ((n,val):xs)
+    | otherwise = (n,v):(assign name val xs)
+
+-- execute statement environment
+execute :: Statement -> [(String, Int)] -> [(String, Int)]
+execute (Assignment (Variable name) e2) env = assign name (value e2 env) env
+execute (Compound (s:[])) env = execute s env
+execute (Compound (s:r)) env = execute (Compound r) (execute s env)
+execute (If e1 st sf) env
+	| (value e1 env) == 1 = execute st env
+	| otherwise = execute sf env
+execute (While e1 s) env
+	| (value e1 env) == 1 = execute (While e1 s) (execute s env) 
+	| otherwise = env
+execute _ env = env
+
+-- run program command with empty environment
+run :: Statement -> [(String, Int)]
+run program = execute program []
 
 
---execute :: Statement -> [([Char], Int)] -> [([Char], Int)]
---execute (Assignment (Variable name) e2) ((n, v):remain)
---execute (Compound s) env = foldr (`execute` env) s 
+{- execution trace
+
+*Main> :l hw4.hs
+[1 of 1] Compiling Main             ( hw4.hs, interpreted )
+Ok, modules loaded: Main.
+*Main> run factorial
+[("n",1),("fact",5040)]
+*Main> run collatz
+[("num",1),("terms",10)]
+
+-}
 
 
- 
 
--- test samples
+-----------------------
+---- TEST SECTION -----
+-----------------------
+
 envtest :: [(String, Int)]
 envtest = [("abc", 7), ("test",1)]
 
@@ -104,30 +141,23 @@ testcase1 = [ex1, ex2, ex3, ex4, ex5, ex6]
 
 -- statement test
 st1 = Assignment (Variable "x") ex1
-st2 = Compound [st1, (Assignment (Variable "y") ex2), (While ex5 st1)]
-st3 = If ex6 st1 st2
-st4 = While ex5 st1
-st5 = Compound [st1, st2, st3, st4]
-testcase2 = [st1, st2, st3, st4, st5]
+st2 = Assignment ex3 (Number 22)
+st3 = Compound [st1, (Assignment (Variable "y") ex2), st2]
+st4 = If ex6 st1 st2
+st5 = While (Binary (Variable "test") LsE ex1) (Assignment (Variable "test") ex2)
+st6 = Compound [st1, st2, st3, st4, st5]
+-- [[("abc",7),("test",1),("x",4)],
+--  [("abc",22),("test",1)],
+--  [("abc",22),("test",1),("x",4),("y",11)],
+--  [("abc",7),("test",1),("x",4)],
+--  [("abc",7),("test",11)],
+--  [("abc",22),("test",11),("x",4),("y",11)] 
+-- ]
+testcase2 = [st1, st2, st3, st4, st5, st6]
 
--- test = map (map value (testcase)) environ
+-- main test mapping
 testexp = map (`value` envtest) testcase1
--- teststm = map (`execute` environ) testcase2
-
-diffl :: (Num a) => [a] -> [a]
-diffl xs = scanl (-) 0 xs
-
-diffr :: (Num a) => [a] -> [a]
-diffr xs = scanr (-) 0 xs
-
-aenv :: [(String, Int)]
-aenv = [("a", 0), ("b", 1), ("c", 2)]
-assign :: String -> Int -> [(String, Int)] -> [(String, Int)]
-assign name val [] = [(name, val)]
-assign name val ((n,v):xs) 
-    | name == n = ((n,val):xs)
-    | otherwise = (n,v):(assign name val xs)
-
+teststm = map (`execute` envtest) testcase2
 
 
 
