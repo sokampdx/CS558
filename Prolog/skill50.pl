@@ -95,7 +95,9 @@ triangle(Min, Max, List) :-
 triangle(Min, Max, []) :- Min > Max.
 
 %   primes
-
+primeList(N, Result) :-
+	inclist(N, List),
+	primeCheck(List, Result).
 
 
 %   fibonacci sequence
