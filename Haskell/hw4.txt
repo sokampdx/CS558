@@ -2,12 +2,32 @@
 
 factorial =
 Compound [
-	Assignment (Variable "n") (Number 7),
-	Assignment (Variable "fact") (Number 1),
-	While (Binary (Variable "n") GrT (Number 1)) 
+	Assignment 
+		(Variable "n") 
+		(Number 7),
+	Assignment 
+		(Variable "fact") 
+		(Number 1),
+	While 
+		(Binary 
+			(Variable "n") 
+			GrT 
+			(Number 1)) 
 		(Compound [
-			Assignment (Variable "fact") (Binary (Variable "fact") Mul (Variable "n")),
-			Assignment (Variable "n") (Binary (Variable "n") Sub (Number 1))
+			Assignment 
+				(Variable "fact") 
+				(Binary 
+					(Variable "fact") 
+					Mul 
+					(Variable "n")
+				),
+			Assignment 
+				(Variable "n") 
+				(Binary 
+					(Variable "n") 
+					Sub 
+					(Number 1)
+				)
 		])
 ]
 
@@ -15,9 +35,16 @@ Compound [
 
 collatz = 
 Compound [
-	Assignment (Variable "num") (Number 13),
-	Assignment (Variable "terms") (Number 1),
-	While (Binary (Variable "num") GrT (Number 1)) 
+	Assignment 
+		(Variable "num") 
+		(Number 13),
+	Assignment 
+		(Variable "terms") 
+		(Number 1),
+	While 
+		(Binary 
+			(Variable "num") 
+			GrT (Number 1)) 
 		(Compound [
 			If (Binary (Binary (Variable "num") Mod (Number 2)) Equ (Number 0)) 
 				(Assignment (Variable "num") (Binary (Variable "num") Div (Number 2))) 
