@@ -169,25 +169,73 @@ takeLast(N, S, R) :-
 	
 %   drop last n element
 dropLast(0, S, S).
-dropLast(N, S, R) :-
+dropLast(N, S, R) :- 
 	N > 0,
-	length(S, LS),
-	length(R, LR),
-	LR is LS - N,
-	take(LR, S, R).
-
-
-
+	removeLast(S, X),
+	M is N - 1,
+	dropLast(M, X, R).
 
 %   remove all even numbers
+removeEven([], []).
+removeEven([H|T], R) :- 
+	X is H mod 2,
+	X == 0,
+	removeEven(T, R).
+removeEven([H|T], [H|R]) :-
+	X is H mod 2,
+	X == 1,
+	removeEven(T, R).
+
 %   remove all except even numbers
+removeOdd([], []).
+removeOdd([H|T], R) :- 
+	X is H mod 2,
+	X == 1,
+	removeOdd(T, R).
+removeOdd([H|T], [H|R]) :-
+	X is H mod 2,
+	X == 0,
+	removeOdd(T, R).
+
 %   remove every other element
+removeEO(List, Keep) :-
+	length(List, N), 
+	removeEOI(List, 1, N, Keep).
+removeEOI([], _, _, []).
+removeEOI([_|List], S, N, Keep) :-
+	S1 is S + 1,
+	S =< N,
+	X is S mod 2,
+	X == 0,
+	removeEOI(List, S1, N, Keep).	
+removeEOI([H|List], S, N, [H|Keep]) :-
+	S2 is S + 1,
+	S =< N,
+	X is S mod 2,
+	X == 1,
+	removeEOI(List, S2, N, Keep).
 
 %   rotate left
+rotateLeft([], []).
+rotateLeft([H|T], X) :-
+	append(T, [H], X).
+
 %   rotate right
+rotateRight([], []).
+rotateRight(X, [H|T]) :-
+	append(T, [H], X).
 
 %   add together all the numbers
+mySum([], 0).
+mySum([H|T], S) :-
+	mySum(T, X),
+	S is H + X.
+
 %   average all the numbers
+average(List, Result) :-
+	length(List, N),
+	mySum(List, S),
+	Result is S / N.
 
 % Manipulate a binary search tree
 %   build a tree
