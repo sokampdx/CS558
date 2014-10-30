@@ -106,32 +106,32 @@ fibList x = (fibList (x-1)) ++ [fib x]
 --   add together all the numbers
 --   average all the numbers
 
-data Tree 
-	= Node Int Tree Tree
+data Tree a 
+	= Node a (Tree a)  (Tree a)
 	| Leaf
 	deriving Show
 
 -- Manipulate a binary search tree
 --   build a tree
-buildBST :: [Int] -> Tree
+buildBST :: a -> (Tree a)
 buildBST [] = Leaf
 buildBST (x:xs) = buildNode x (buildBST xs)
 
-buildNode :: Int -> Tree -> Tree
+buildNode :: a -> (Tree a) -> (Tree a)
 buildNode x (Leaf) = Node x Leaf Leaf
 buildNode x (Node y left right)
 	| x > y = Node y left (buildNode x right)
 	| otherwise = Node y (buildNode x left) right
 
 --   count the elements
-countBST :: Tree -> Int
+countBST :: (Tree a) -> Int
 countBST Leaf = 0
 countBST (Node _ left right) = 1 + countBST left + countBST right
 
 --   count the elements with some property
 
 --   test the membership of an element
-memberBST :: Int -> Tree -> Bool
+memberBST :: a -> (Tree a) -> Bool
 memberBST _ Leaf = False
 memberBST x (Node y left right)
 	| x == y = True
@@ -139,52 +139,52 @@ memberBST x (Node y left right)
 	| otherwise = memberBST x left
 
 --   insert an element
-insertBST :: Int -> Tree -> Tree
+insertBST :: a -> Tree a -> Tree a
 insertBST x Leaf = Node x Leaf Leaf
 insertBST x (Node y left right)
 	| x > y = Node y left (insertBST x right)
 	| otherwise = Node y (insertBST x left) right
 
 --   remove an element (harder)
-removeBST :: Int -> Tree -> Tree
+removeBST :: a -> Tree a -> Tree a
 removeBST _ Leaf = Leaf
 removeBST x (Node y left right)
 	| x == y = removeNode left right
 	| x > y = Node y left (removeBST x right)
 	| otherwise = Node y (removeBST x left) right 
 
-removeNode :: Tree -> Tree -> Tree
+removeNode :: Tree a -> Tree a -> Tree a
 removeNode Leaf Leaf = Leaf
 removeNode Leaf tree = tree
 removeNode tree Leaf = tree
 removeNode tree (Node x left right) = Node x (rotateTree left tree) right
 
-rotateTree :: Tree -> Tree -> Tree
+rotateTree :: Tree a -> Tree a -> Tree a
 rotateTree Leaf Leaf = Leaf
 rotateTree Leaf tree = tree
 rotateTree tree Leaf = tree
 rotateTree tree (Node x left right) = Node x left (rotateTree tree right)
 
 --   traverse in pre/in/post-order
-traverseIn :: Tree -> [Int]
+traverseIn :: Tree a -> [a]
 traverseIn Leaf = []
 traverseIn (Node x left right) = (traverseIn left) ++ [x] ++ (traverseIn right)
 
-traversePre :: Tree -> [Int]
+traversePre :: Tree a -> [a]
 traversePre Leaf = []
 traversePre (Node x left right) = [x] ++ (traversePre left) ++ (traversePre right)
 
-traversePost :: Tree -> [Int]
+traversePost :: Tree a -> [a]
 traversePost Leaf = []
 traversePost (Node x left right) = (traversePost left) ++ (traversePost right) ++ [x]
 
 --   sum all the number
-sumBST :: Tree -> Int
+sumBST :: Tree a -> a
 sumBST Leaf = 0
 sumBST (Node x left right) = x + (sumBST left) + (sumBST right)
 
 --   average the numbers
-aveBST :: Tree -> Int
+aveBST :: Tree a -> a
 aveBST Leaf = error "empty tree"
 aveBST tree = div (sumBST tree) (countBST tree)
 
