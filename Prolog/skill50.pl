@@ -286,7 +286,31 @@ average(List, Result) :-
 	Result is S / N.
 
 % Manipulate a binary search tree
-%   build a tree
+% build a tree
+left(node(L,_,_), L).
+right(node(_,_,R), R).
+isin(X, node(_,Y,_)) :- X=Y.
+isin(X, node(L,Y,_)) :- X<Y, isin(X, L).
+isin(X, node(_,Y,R)) :- X<Y, isin(X, R).
+
+%% insert(element, startTree, endTree)
+insert(X, leaf, node(leaf, X, leaf)).
+insert(X, node(L, N, R), node(L1, N, R)) :-
+	X < N,
+	insert(X, L, L1).
+insert(X, node(L, N, R), node(L, N, R1)) :-
+	X > N,
+	insert(X, R, R1).
+insert(X, node(L, N, R), node(L, N, R)) :- X=N. 
+
+%% buildBST(list, startTree, endTree)
+buildBST([], Tree, Tree).
+buildBST([X|Y], Start, End) :- 
+	insert(X, Start , Tree),
+	buildBST(Y, Tree, End).
+
+build(List, Tree) :- buildBST(List, leaf, Tree).
+
 %   count the elements
 %   count the elements with some property
 %   test the membership of an element
