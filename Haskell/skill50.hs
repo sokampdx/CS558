@@ -113,11 +113,11 @@ data Tree a
 
 -- Manipulate a binary search tree
 --   build a tree
-buildBST :: a -> (Tree a)
+buildBST :: (Ord a) => a -> (Tree a)
 buildBST [] = Leaf
 buildBST (x:xs) = buildNode x (buildBST xs)
 
-buildNode :: a -> (Tree a) -> (Tree a)
+buildNode :: (Ord a) => a -> (Tree a) -> (Tree a)
 buildNode x (Leaf) = Node x Leaf Leaf
 buildNode x (Node y left right)
 	| x > y = Node y left (buildNode x right)
@@ -131,7 +131,7 @@ countBST (Node _ left right) = 1 + countBST left + countBST right
 --   count the elements with some property
 
 --   test the membership of an element
-memberBST :: a -> (Tree a) -> Bool
+memberBST :: (Ord a) => a -> (Tree a) -> Bool
 memberBST _ Leaf = False
 memberBST x (Node y left right)
 	| x == y = True
@@ -139,14 +139,14 @@ memberBST x (Node y left right)
 	| otherwise = memberBST x left
 
 --   insert an element
-insertBST :: a -> Tree a -> Tree a
+insertBST :: (Ord a) => a -> Tree a -> Tree a
 insertBST x Leaf = Node x Leaf Leaf
 insertBST x (Node y left right)
 	| x > y = Node y left (insertBST x right)
 	| otherwise = Node y (insertBST x left) right
 
 --   remove an element (harder)
-removeBST :: a -> Tree a -> Tree a
+removeBST :: (Ord a) => a -> Tree a -> Tree a
 removeBST _ Leaf = Leaf
 removeBST x (Node y left right)
 	| x == y = removeNode left right
@@ -179,12 +179,12 @@ traversePost Leaf = []
 traversePost (Node x left right) = (traversePost left) ++ (traversePost right) ++ [x]
 
 --   sum all the number
-sumBST :: Tree a -> a
+sumBST :: Tree Int -> Int
 sumBST Leaf = 0
 sumBST (Node x left right) = x + (sumBST left) + (sumBST right)
 
 --   average the numbers
-aveBST :: Tree a -> a
+aveBST :: Tree Int -> Int
 aveBST Leaf = error "empty tree"
 aveBST tree = div (sumBST tree) (countBST tree)
 
