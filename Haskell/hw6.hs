@@ -71,4 +71,20 @@ g2 = Adj []
 g3 = Adj [(1, []), (2, []), (3, []), (4, []), (5, [])]
 g4 = Adj [(1, [2,3,4]), (2, [1,3]), (3, [1,2,4]), (4, [1,3,5]), (5, [4])]
 
+-- Test Result
+{-
+
+Prelude> :l hw6.hs
+[1 of 1] Compiling Main             ( hw6.hs, interpreted )
+Ok, modules loaded: Main.
+*Main> findpath 1 5 g1
+[[1,2,5],[1,3,2,5],[1,4,3,2,5],[1,3,5],[1,2,3,5],[1,4,3,5],[1,4,5],[1,3,4,5],[1,2,3,4,5]]
+*Main> findpath 1 5 g2
+[]
+*Main> findpath 1 5 g3
+[]
+*Main> findpath 1 5 g4
+[[1,4,5],[1,3,4,5],[1,2,3,4,5]]
+
+-}
 
