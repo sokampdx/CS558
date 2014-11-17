@@ -48,7 +48,6 @@ testcase = [t1, t2, t3, t4, t5]
 test = map (tokenize) testcase
 
 {- execution - formatted to show t1-t5 in each line
-
 *Main> :l hw5.hs 
 [1 of 1] Compiling Main             ( hw5.hs, interpreted )
 Ok, modules loaded: Main.
@@ -58,7 +57,6 @@ Ok, modules loaded: Main.
 [NUMBER "123",PLUS,PLUS,NUMBER "456",EOL],
 [IDENT "x",PLUS,IDENT "y",MINUS,LPAREN,NUMBER "999",RPAREN,EOL],
 [NUMBER "22",MINUS,ERROR "!",ERROR "!",EOL]]
-
 -}
 
 
