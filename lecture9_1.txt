@@ -1,0 +1,69 @@
+
+example 1:
+
+a = 1;
+f(a);
+print a;
+
+
+function f(x) {
+  x = x+1;
+  x = x+a;
+  print x;
+}
+
+
+call by value
+3
+1
+
+call by reference
+4
+4
+
+call by value return
+3
+3
+
+
+example 2:
+int a[] = new {1,2,3,4};
+f(a);
+print a;
+
+f(x) {
+	x = new {5,6,7,8};
+	print x;
+}
+
+pass by value
+5,6,7,8
+1,2,3,4
+
+pass by reference
+5,6,7,8
+5,6,7,8
+
+
+
+example 3:
+
+int a[] = new {1,2,3,4};
+f(a);
+print a;
+
+f(x) {
+	x[1] = 7;
+	print x;
+}
+
+pass by value of the address. x is the same address as a. x[1] == a[1]
+1,7,3,4
+1,7,3,4
+
+
+
+
+
+
+
